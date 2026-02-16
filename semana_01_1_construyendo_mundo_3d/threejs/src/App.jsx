@@ -9,7 +9,7 @@ function App() {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} />
 
-        {/* Center centra automáticamente el modelo */}
+        
         <Center>
           <Model />
         </Center>
