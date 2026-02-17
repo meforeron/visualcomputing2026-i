@@ -50,9 +50,11 @@ Comparación de formatos 3D utilizando React Three Fiber, que incluye:
 ### Python - Implementación
 
 ![Resultado Python 1](./media/python1.gif)
+
 Animación mostrando el modelo OBJ.
 
 ![Resultado Python 2](./media/python2.png)
+
 Captura de pantalla del análisis de propiedades y comparación.
 
 
