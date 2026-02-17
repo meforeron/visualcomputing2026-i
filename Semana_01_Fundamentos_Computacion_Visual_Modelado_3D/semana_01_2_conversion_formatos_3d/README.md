@@ -2,7 +2,7 @@
 
 ## Nombre del estudiante
 
-[Melissa Forero Narváez]
+Melissa Forero Narváez
 
 ## Fecha de entrega
 
@@ -10,176 +10,207 @@
 
 ---
 
+
 ## Descripción breve
 
-Explicación clara del objetivo del taller y lo que se desarrolló. Describe en 2-3 párrafos qué se pretendía explorar, aplicar o construir, y qué se logró implementar.
+Taller sobre conversión y visualización de modelos 3D en formatos OBJ, STL y GLTF, analizando diferencias geométricas y de visualización mediante Python y Three.js.
 
 ---
 
 ## Implementaciones
 
-Describe cada implementación realizada por entorno de desarrollo.
 
 ### Python
 
-Descripción de lo implementado en Python, herramientas utilizadas (OpenCV, PyTorch, trimesh, etc.) y funcionalidad lograda.
+Implementación en Python para conversión, análisis y comparación de modelos 3D usando la librería trimesh:
 
-### Unity
+- Carga de modelos en formatos STL, OBJ y GLTF
+- Conversión entre formatos usando `trimesh.export`
+- Análisis geométrico
+- Comparación de propiedades entre modelos convertidos
+- Visualización interactiva de los modelos
 
-Descripción de lo implementado en Unity, características del proyecto, scripts desarrollados y funcionalidad lograda.
 
 ### Three.js / React Three Fiber
 
-Descripción de lo implementado en Three.js o React Three Fiber, componentes creados y funcionalidad lograda.
+Comparación de formatos 3D utilizando React Three Fiber, que incluye:
 
-### Processing
-
-Descripción de lo implementado en Processing (si aplica).
+- Implementación de OBJLoader, STLLoader y GLTFLoader para manejar diferentes formatos
+- Sistema de botones para alternar entre formatos en tiempo real
+- Función automática de conteo de vértices y caras por formato
+- Canvas de pantalla completa con iluminación ambiental y direccional
+- OrbitControls para exploración 3D completa (zoom, rotación, paneo)
+- Display de estadísticas del modelo
 
 ---
 
 ## Resultados visuales
 
-Incluye al menos 2 capturas, GIFs o videos por cada implementación. Los archivos deben estar en la carpeta `media/` del proyecto.
 
 ### Python - Implementación
 
-![Resultado Python 1](./media/python_resultado_1.gif)
+![Resultado Python 1](./media/python1.gif)
+Animación mostrando el modelo OBJ.
 
-Descripción de lo que muestra la imagen/GIF.
+![Resultado Python 2](./media/python2.png)
+Captura de pantalla del análisis de propiedades y comparación.
 
-![Resultado Python 2](./media/python_resultado_2.png)
-
-Descripción de lo que muestra la imagen.
-
-### Unity - Implementación
-
-![Resultado Unity 1](./media/unity_resultado_1.gif)
-
-Descripción de lo que muestra el GIF.
 
 ### Three.js - Implementación
 
-![Resultado Three.js 1](./media/threejs_resultado_1.gif)
+![Resultado Three.js 1](./media/threejs1.png)
 
-Descripción de lo que muestra el GIF.
+Vista formato OBJ
+
+![Resultado Three.js 2](./media/threejs3.png)
+
+Vista formato STL
+
+![Resultado Three.js 3](./media/threejs2.png)
+
+Vista formato GLTF
 
 ---
 
 ## Código relevante
 
-Incluye snippets del código más importante o enlaces a los archivos completos.
 
-### Ejemplo de código Python:
+
+
+### Python:
 
 ```python
-import cv2
+import trimesh
 import numpy as np
 
-# Cargar imagen
-image = cv2.imread('input.jpg')
+def cargar_modelo(ruta):
+  return trimesh.load_mesh(ruta)
 
-# Aplicar filtro
-filtered = cv2.GaussianBlur(image, (5, 5), 0)
+def analizar_modelo(mesh):
+  print(f"Vértices: {len(mesh.vertices)}")
+  print(f"Caras: {len(mesh.faces)}")
+  unicos = np.unique(np.asarray(mesh.vertices).round(6), axis=0)
+  print(f"Duplicados: {len(mesh.vertices) - len(unicos)}")
+  print(f"Área: {mesh.area:.2f}")
+  print(f"Volumen: {mesh.volume:.2f}")
+
+mesh_stl = cargar_modelo('model.stl')
+mesh_stl.export('model.obj')
+mesh_obj = cargar_modelo('model.obj')
+
+print("STL:")
+analizar_modelo(mesh_stl)
+print("OBJ:")
+analizar_modelo(mesh_obj)
 ```
 
-### Ejemplo de código Unity (C#):
 
-```csharp
-void Update() {
-    transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
-}
-```
-
-### Ejemplo de código Three.js:
+### Three.js:
 
 ```javascript
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { useState } from 'react'
+import Model from './Model'
 
-function Box() {
+export default function App() {
+  const [format, setFormat] = useState('obj')
+  const [modelInfo, setModelInfo] = useState({ vertices: 0, faces: 0 })
+
   return (
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="orange" />
-    </mesh>
+    <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 5]} />
+      <Model format={format} onModelLoad={setModelInfo} />
+      <OrbitControls />
+    </Canvas>
   )
+}
+
+
+const countVerticesAndFaces = (object) => {
+  let vertices = 0, faces = 0
+  object.traverse((child) => {
+    if (child.geometry) {
+      vertices += child.geometry.attributes.position?.count || 0
+      faces += child.geometry.index ? 
+        child.geometry.index.count / 3 : 
+        child.geometry.attributes.position?.count / 3 || 0
+    }
+  })
+  return { vertices, faces: Math.floor(faces) }
 }
 ```
 
 ---
 
+
+
+
 ## Prompts utilizados
 
-Lista los prompts utilizados con herramientas de IA generativa durante el desarrollo del taller (si aplica).
-
-### Ejemplos:
-
 ```
-"Crea un script en Python que detecte bordes usando el algoritmo de Canny"
+- ¿Cómo convierto STL a OBJ y GLTF automáticamente?
 
-"Explícame cómo implementar flujo óptico con OpenCV"
+- ¿Cómo comparar propiedades geométricas entre modelos?
 
-"Genera un shader básico en GLSL para efecto de ondas"
+- ¿Por qué el modelo desaparece al alternar formatos?
+
+- ¿Cómo mostrar estadísticas del modelo en pantalla?
 ```
-
-Si no utilizaste IA generativa, indica: "No se utilizaron prompts de IA en este taller."
 
 ---
 
+
 ## Aprendizajes y dificultades
 
-Reflexión personal sobre el proceso de desarrollo del taller en 2-3 párrafos.
+**Aprendizajes:** Se comprendieron las diferencias clave entre formatos 3D, su conversión y análisis en Python y Three.js.
 
-### Aprendizajes
+**Dificultades:** En Python, comparar propiedades entre formatos y calcular volumen en mallas abiertas. En Three.js, problemas de visualización y escalado al alternar modelos.
 
-¿Qué aprendiste o reforzaste con este taller? ¿Qué conceptos técnicos quedaron más claros?
-
-### Dificultades
-
-¿Qué parte fue más compleja o desafiante? ¿Cómo lo resolviste?
-
-### Mejoras futuras
-
-¿Qué mejorarías o qué aplicarías en futuros proyectos?
+**Mejoras futuras:** Agregar comparación visual simultánea, análisis automático de diferencias y mejorar la experiencia de usuario en la visualización web.
 
 ---
 
 ## Contribuciones grupales (si aplica)
 
-Si el taller fue realizado en grupo, describe exactamente lo que tú hiciste:
-
-```markdown
-- Programé el detector de características SIFT en Python
-- Implementé la interfaz de usuario en Three.js
-- Generé los GIFs y documentación del README
-- Realicé las pruebas de rendimiento y optimización
-```
-
-Si fue individual, indica: "Taller realizado de forma individual."
+Taller realizado de forma individual.
 
 ---
 
 ## Estructura del proyecto
 
+
 ```
-semana_XX_Y_nombre_taller/
-├── python/          # Código Python (si aplica)
-├── unity/           # Proyecto Unity (si aplica)
-├── threejs/         # Código Three.js/React (si aplica)
-├── processing/      # Código Processing (si aplica)
-├── media/           # OBLIGATORIO: Imágenes, videos, GIFs
-└── README.md        # Este archivo
+semana_01_2_conversion_formatos_3d/
+├── python/              
+│   ├── main.ipynb       # Notebook de conversión, análisis y visualización
+│   └── models/          # Modelos STL, OBJ, GLTF generados y convertidos
+├── threejs/             # Aplicación React Three Fiber
+│   ├── src/
+│   │   ├── App.jsx      # Componente principal
+│   │   ├── Model.jsx    # Cargador de modelos 3D
+│   │   ├── main.jsx     # Punto de entrada
+│   │   └── index.css   
+│   ├── public/
+│   │   ├── model.obj    # Modelo en formato OBJ
+│   │   ├── model.stl    # Modelo en formato STL
+│   │   └── model.gltf   # Modelo en formato GLTF
+│   └── package.json     
+├── media/               # Imágenes, videos, GIFs
+└── README.md            
 ```
 
 ---
 
 ## Referencias
 
-Lista las fuentes, tutoriales, documentación o papers consultados durante el desarrollo:
-
-- Documentación oficial de OpenCV: https://docs.opencv.org/
-- Tutorial de React Three Fiber: https://docs.pmnd.rs/react-three-fiber/
-- Paper: "SIFT: Scale-Invariant Feature Transform" - David Lowe
+- Documentación oficial de React Three Fiber: https://docs.pmnd.rs/react-three-fiber/
+- Three.js Official Documentation: https://threejs.org/docs/
+- React Three Drei Components: https://github.com/pmndrs/drei
+- OBJ File Format Specification: https://en.wikipedia.org/wiki/Wavefront_.obj_file
+- STL File Format Documentation: https://en.wikipedia.org/wiki/STL_(file_format)
+- GLTF 2.0 Specification: https://github.com/KhronosGroup/glTF
+- React Three Fiber Performance Tips: https://docs.pmnd.rs/react-three-fiber/advanced/pitfalls
 
 ---
