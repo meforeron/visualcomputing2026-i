@@ -1,0 +1,98 @@
+/* ─── Layout ────────────────────────────────────────────────────────────── */
+.app-wrapper {
+  position: fixed;
+  inset: 0;
+  background: #0d0d1a;
+}
+
+.canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ─── UI Panel ──────────────────────────────────────────────────────────── */
+.ui-panel {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 10;
+  background: rgba(10, 5, 30, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  color: #e2d9f3;
+  font-family: system-ui, sans-serif;
+  max-width: 280px;
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.25);
+}
+
+.ui-panel h2 {
+  margin: 0 0 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+
+/* ─── Info rows ─────────────────────────────────────────────────────────── */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.82rem;
+  color: #c4b5fd;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge.translate { background: #5b21b6; color: #ede9fe; }
+.badge.rotate    { background: #0e7490; color: #cffafe; }
+.badge.scale     { background: #065f46; color: #d1fae5; }
+
+/* ─── Buttons ───────────────────────────────────────────────────────────── */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn-group button {
+  flex: 1;
+  padding: 0.45rem 0;
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  border-radius: 8px;
+  background: transparent;
+  color: #c4b5fd;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-group button:hover {
+  background: rgba(124, 58, 237, 0.25);
+}
+
+.btn-group button.active {
+  background: #7c3aed;
+  color: #fff;
+  border-color: #7c3aed;
+}
+
+/* ─── Hint ──────────────────────────────────────────────────────────────── */
+.hint {
+  margin: 0.8rem 0 0;
+  font-size: 0.72rem;
+  color: #6d6d8a;
+  text-align: center;
+}
+
